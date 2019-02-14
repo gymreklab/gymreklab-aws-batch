@@ -7,8 +7,7 @@ The general steps described below are:
 1. Build a docker image with all the required software for each job
 2. Putting the image in Docker hub
 3. Creating a job script
-4. Create a job definition
-5. Submit and run the job
+4. Create a batch setup (compute environment, queue, and job definition) and run!
 
 ## Prereqs
 
@@ -53,7 +52,7 @@ Compute environment:
 * ecsInstanceRole
 * micro_key
 * On-Demand (for the real deal we'll use Spot, much cheaper)
-* m4.large instance type
+* m4.large instance type (for the real deal, we'll need to modify based on our needs)
 * Later we'll need to set launch template to add space
 
 Job Queue: 
@@ -71,5 +70,3 @@ Submit job
 * env variables
 Key=BATCH_FILE_TYPE, Value=script
 Key=BATCH_FILE_S3_URL, Value=s3:///myjob.sh. Don’t forget to use the correct URL for your file.
-
-## Step 5: Submit and run the job
