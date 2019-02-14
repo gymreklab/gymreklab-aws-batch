@@ -18,6 +18,7 @@ RUN wget -O GangSTR-2.1.tar.gz https://github.com/gymreklab/GangSTR/releases/dow
 RUN tar -xzvf GangSTR-2.1.tar.gz
 WORKDIR GangSTR-2.1
 RUN ./install-gangstr.sh
+RUN ldconfig
 
 # Add the fetch_and_run.sh script
 ADD fetch_and_run.sh /usr/local/bin/fetch_and_run.sh

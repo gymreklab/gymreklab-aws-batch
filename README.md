@@ -41,6 +41,17 @@ Now upload this job to s3
 aws s3 cp myjob.sh s3://gymreklab-awsbatch/myjob.sh # Note you don't need to run this, it's already there
 ```
 
+We can actually test out an example job before submitting to AWS. Note if we're running this outside of AWS we'll have to set the environment variables for our AWS credentials. Try:
+
+```
+docker run \
+       --env BATCH_FILE_TYPE="script" \
+       --env BATCH_FILE_S3_URL="s3://gymreklab-awsbatch/myjob.sh" \
+       --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+       --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+       awsbatch/gangstr_example myjob.sh 60
+```
+
 ## Step 4: Create a job definition
 
 Now we need to set up a compute environment, job queue and job definition at: https://console.aws.amazon.com/batch
