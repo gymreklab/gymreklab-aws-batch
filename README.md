@@ -81,3 +81,9 @@ Submit job
 * env variables
 Key=BATCH_FILE_TYPE, Value=script
 Key=BATCH_FILE_S3_URL, Value=s3:///myjob.sh. Don’t forget to use the correct URL for your file.
+
+# Coming next:
+
+* Command line job submission
+* Configuring an instance to have enough space
+* Example actually running GangSTR
