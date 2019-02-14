@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -qqy \
     make \
     pkg-config \
     wget \
+    unzip \
     zlib1g-dev
 
 # Download, compile, and install GangSTR
