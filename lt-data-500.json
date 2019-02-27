@@ -1,0 +1,15 @@
+{
+    "LaunchTemplateName": "increase-container-volume-encrypt-500",
+    "LaunchTemplateData": {
+        "BlockDeviceMappings": [
+            {
+                "DeviceName": "/dev/xvdcz",
+                "Ebs": {
+                    "Encrypted": true,
+                    "VolumeSize": 500,
+                    "VolumeType": "st1"
+                }
+            }
+        ]
+    }
+}

@@ -52,7 +52,7 @@ docker run \
        awsbatch/gangstr_example myjob.sh 60
 ```
 
-## Step 4: Create a job definition
+## Step 4a: Submit a job from the console
 
 Now we need to set up a compute environment, job queue and job definition at: https://console.aws.amazon.com/batch
 
@@ -81,6 +81,17 @@ Submit job
 * env variables
 Key=BATCH_FILE_TYPE, Value=script
 Key=BATCH_FILE_S3_URL, Value=s3:///myjob.sh. Don’t forget to use the correct URL for your file.
+
+## Step 4b: submit a job from the command line
+```
+aws batch submit-job \
+    --job-name test-mgymrek \
+    --job-queue gangstr-example \
+    --job-definition gangstr-example \
+    --container-overrides 'command=["myjob.sh",60],environment=[{name="BATCH_FILE_TYPE",value="script"},{name="BATCH_FILE_S3_URL",value="s3://gymreklab-awsbatch/myjob.sh"}]'
+
+```
+
 
 # Coming next:
 

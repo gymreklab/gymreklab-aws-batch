@@ -1,0 +1,8 @@
+{
+    "image": "gymreklab/str-toolkit-run:latest",
+    "vcpus": 1,
+    "memory": 500,
+    "command": [],
+    "jobRoleArn": "arn:aws:iam::369425333806:role/batchJobRole",
+    "user": "nobody"
+}
