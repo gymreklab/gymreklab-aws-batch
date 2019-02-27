@@ -1,3 +1,10 @@
+This tutorial goes through running a single GangSTR job on AWS. Unlike last time, we'll be doing this mostly from the command line.
+
+The major steps are:
+* Set up the compute environment (This has already been done and only needs to be done once. But the steps are included below for your reference and if you need to change something. For instance, you may want to change the instance type or EBS storage space available)
+* Create a job script
+* Run the job
+
 # Set up (already done)
 
 ## Upload launch template to add space to our instance
