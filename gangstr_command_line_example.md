@@ -13,6 +13,10 @@ aws ec2 create-launch-template --cli-input-json file://lt-data-500.json
 ```
 
 ### Create batch compute environment and queue, register job definition
+TODO update with mount point to mount /dev/xvdcz
+TODO do we need to format the file system? put in launch template user data? or can we do that from docker?
+TODO test on ssh -i ~/keys/micro_key.pem root@ec2-3-93-173-52.compute-1.amazonaws.com docker run -v /dev/xvdcz:/dev/xvdcz -it gymreklab/str-toolkit /bin/bash
+TODO see https://aws.amazon.com/blogs/compute/amazon-ecs-and-docker-volume-drivers-amazon-ebs/
 ```
 aws batch create-compute-environment \
     --compute-environment-name gangstr-single-core-500GB \
@@ -55,8 +59,20 @@ An example script is provided in: `run_gangstr_ena_test.sh`. This has been uploa
 ## Test the script locally on Docker
 TODO
 make sure to pass in AWS credentials
-# docker run -v /storage/mgymrek/dev/xvdcz/:/dev/xvdcz -it gymreklab/str-toolkit /bin/bash
 
+```
+BAMURL=ftp://ftp.sra.ebi.ac.uk/vol1/run/ERR195/ERR1955393/e807d440-bd7c-4fbf-87cf-fd7dab0c11c7.bam 
+ACC=ERR1955393
+AWS_ACCESS_KEY_ID=$(cat ~/.aws/credentials  | grep id | cut -f 2 -d '=' | head -n 1 | cut -f 2 -d' ')
+AWS_SECRET_ACCESS_KEY=$(cat ~/.aws/credentials  | grep secret | cut -f 2 -d '=' | head -n 1 | cut -f 2 -d' ')
+docker run \
+       -v /storage/mgymrek/dev/xvdcz/:/dev/xvdcz \
+       --env BATCH_FILE_TYPE="script" \
+       --env BATCH_FILE_S3_URL="s3://gymreklab-awsbatch/run_gangstr_ena_test.sh" \
+       --env AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
+       --env AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+       -it gymreklab/str-toolkit-run run_gangstr_ena_test.sh $BAMURL $ACC
+```
 
 ## Run the job on the queue we created
 

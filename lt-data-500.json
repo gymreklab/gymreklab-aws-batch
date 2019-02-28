@@ -7,7 +7,8 @@
                 "Ebs": {
                     "Encrypted": true,
                     "VolumeSize": 500,
-                    "VolumeType": "st1"
+                    "VolumeType": "st1",
+		    "DeleteOnTermination": true
                 }
             }
         ]

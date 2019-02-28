@@ -39,19 +39,19 @@ mkdir -p ${DATADIR}/datafiles
 mkdir -p ${DATADIR}/results
 
 # Ref genome
-wget -O ${DATADIR}/datafiles/hs37d5.fa.gz ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz
-gunzip ${DATADIR}/datafiles/hs37d5.fa.gz || die "Could not unzip chr4"
+wget -O ${DATADIR}/datafiles/hs37d5.fa.gz ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz || die "Could not download hs37 ref"
+gunzip ${DATADIR}/datafiles/hs37d5.fa.gz #|| die "Could not unzip" file was corrupted so gzip gives non-zero error...
 samtools faidx ${DATADIR}/datafiles/hs37d5.fa || die "Could not index reference fasta"
 
 # GangSTR reference regions
 aws s3 cp s3://gangstr/hs37_ver13.bed.gz ${DATADIR}/datafiles/hs37_ver13.bed.gz || die "Error copying GangSTR ref"
-gunzip ${DATADIR}/datafiles/hs37_ver13.bed.gz || die "Could not unzip GangSTR ref"
+gunzip -f ${DATADIR}/datafiles/hs37_ver13.bed.gz || die "Could not unzip GangSTR ref"
 cat ${DATADIR}/datafiles/hs37_ver13.bed | awk -v"chrom=$CHROM" '($1==chrom)' > \
-    ${DATADIR}/datafiles/hs37_ver13.chrom${CHROM}.bed
+    ${DATADIR}/datafiles/hs37_ver13.chrom${CHROM}.bed || die "Could not subset ref"
 
 # ENA BAM file and index (When doing for real, use ascp or S3 if possible)
-samtools view -bS ${BAMURL} ${CHROM} > ${DATADIR}/datafiles/${ACC}.bam
-samtools index ${DATADIR}/datafiles/${ACC}.bam
+samtools view -bS ${BAMURL} ${CHROM} > ${DATADIR}/datafiles/${ACC}.bam || die "Could not fetch bam region"
+samtools index ${DATADIR}/datafiles/${ACC}.bam || die "Could not index bam"
 
 ### Second, run GangSTR+DumpSTR
 GangSTR \
@@ -59,9 +59,9 @@ GangSTR \
     --regions ${DATADIR}/datafiles/hs37_ver13.chrom${CHROM}.bed \
     --ref ${DATADIR}/datafiles/hs37d5.fa \
     --out ${DATADIR}/results/${ACC} \
-    --chrom ${CHROM}
-bgzip ${DATADIR}/results/${ACC}.vcf
-tabix -p vcf ${DATADIR}/results/${ACC}.vcf.gz
+    --chrom ${CHROM} || die "Error running GangSTR"
+bgzip ${DATADIR}/results/${ACC}.vcf || die "Error zipping GangSTR output"
+tabix -p vcf ${DATADIR}/results/${ACC}.vcf.gz || die "Error indexing GangSTR output"
 
 dumpSTR \
     --vcf ${DATADIR}/results/${ACC}.vcf.gz \
@@ -70,12 +70,12 @@ dumpSTR \
     --max-call-DP 1000 \
     --filter-regions /STRTools/dumpSTR/filter_files/hs37_segmentalduplications.bed.gz \
     --filter-regions-names SEGDUP \
-    --out ${DATADIR}/results/${ACC}.filtered
-bgzip ${DATADIR}/results/${ACC}.filtered.vcf
-tabix -p vcf ${DATADIR}/results/${ACC}.filtered.vcf.gz
+    --out ${DATADIR}/results/${ACC}.filtered || die "Error running DumpSTR"
+bgzip ${DATADIR}/results/${ACC}.filtered.vcf || die "Error zipping DumpSTR output"
+tabix -p vcf ${DATADIR}/results/${ACC}.filtered.vcf.gz || die "Error indexing DumpSTR output"
 
 ### Third, upload results to S3
-aws s3 cp ${DATADIR}/results/${ACC}.filtered.vcf.gz s3://gymreklab-awsbatch/
-aws s3 cp ${DATADIR}/results/${ACC}.filtered.loclog.tab s3://gymreklab-awsbatch/
-aws s3 cp ${DATADIR}/results/${ACC}.filtered.samplog.tab s3://gymreklab-awsbatch/
+aws s3 cp ${DATADIR}/results/${ACC}.filtered.vcf.gz s3://gymreklab-awsbatch/ || die "Error uploading VCF"
+aws s3 cp ${DATADIR}/results/${ACC}.filtered.loclog.tab s3://gymreklab-awsbatch/ || die "Error uploading loclog"
+aws s3 cp ${DATADIR}/results/${ACC}.filtered.samplog.tab s3://gymreklab-awsbatch/ || die "Error uploading samplog"
 
