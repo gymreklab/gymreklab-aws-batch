@@ -4,5 +4,12 @@
     "memory": 500,
     "command": [],
     "jobRoleArn": "arn:aws:iam::369425333806:role/batchJobRole",
-    "user": "nobody"
+    "user": "nobody",
+    "mountPoints": [
+	{
+	    "containerPath": "/data",
+	    "readOnly": false,
+	    "sourceVolume": "/data"
+	}
+    ]
 }

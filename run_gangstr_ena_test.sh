@@ -31,7 +31,7 @@ if [ -z "${ACC}" ]; then
     usage "ACC not given"
 fi
 
-DATADIR=/dev/xvdcz/ # This is where we have all the EBS storage space
+DATADIR=/data # This is where we have all the EBS storage space mounted
 CHROM=22 # Test on this chrom
 
 ### First, download data files needed for GangSTR
