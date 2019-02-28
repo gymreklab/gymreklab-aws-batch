@@ -7,12 +7,8 @@ The major steps are:
 
 ## Set up (already done)
 
-### Upload launch template to add space to our instance
-
-Note, for UserData, do $(base64 lt_startup_v2.sh)
-```
-aws ec2 create-launch-template --cli-input-json file://lt-data-500.json
-```
+### Create a custom AMI with extra storage
+See aws-batch-500 ami-093df555dac8aef68 which has ~500G at /docker_scratch
 
 ### Create batch compute environment and queue, register job definition
 ```
@@ -37,15 +33,6 @@ aws batch register-job-definition \
     --job-definition-name str-toolkit-run \
     --type container \
     --container-properties file://strtoolkit-container-properties.json
-```
-
-### Test job with dummy myjob.sh
-```
-aws batch submit-job \
-    --job-name test-mgymrek-500GB \
-    --job-queue gangstr-single-core-500GB \
-    --job-definition str-toolkit-run \
-    --container-overrides 'command=["myjob.sh",60],environment=[{name="BATCH_FILE_TYPE",value="script"},{name="BATCH_FILE_S3_URL",value="s3://gymreklab-awsbatch/myjob.sh"}]'
 ```
 
 ## Create a job script
@@ -78,7 +65,7 @@ ACC=ERR1955393
 aws batch submit-job \
     --job-name test-ENA-${ACC} \
     --job-queue gangstr-single-core-500GB \
-    --job-definition str-toolkit-run:6 \
+    --job-definition str-toolkit-run:9 \
     --container-overrides 'command=["run_gangstr_ena_test.sh",'"${BAMURL}"','"${ACC}"'],environment=[{name="BATCH_FILE_TYPE",value="script"},{name="BATCH_FILE_S3_URL",value="s3://gymreklab-awsbatch/run_gangstr_ena_test.sh"}]'
 
 ```

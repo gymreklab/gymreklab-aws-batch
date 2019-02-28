@@ -1,24 +1,24 @@
 {
-  "type": "SPOT",
-  "minvCpus": 0,
-  "maxvCpus": 256,
-  "desiredvCpus": 0,
-  "instanceTypes": ["c5.large"],
-  "subnets": [
-      "subnet-9f3543c4",
-      "subnet-d1833ddd",
-      "subnet-01d74064",
-      "subnet-41ef966c",
-      "subnet-b60c22ff",
-      "subnet-d670f5ea"
-  ],
-  "securityGroupIds": ["sg-35528449"],
-  "ec2KeyPair": "micro_key",
-  "instanceRole": "ecsInstanceRole",
-  "bidPercentage": 40,
-  "spotIamFleetRole": "arn:aws:iam::369425333806:role/AmazonEC2SpotFleetRole",
-  "launchTemplate": {
-    "launchTemplateName": "increase-container-volume-encrypt-500",
-    "version": "$Default"
-  }
+    "type": "SPOT",
+    "minvCpus": 0,
+    "maxvCpus": 256,
+    "desiredvCpus": 0,
+    "instanceTypes": ["c5.large"],
+    "imageId": "ami-093df555dac8aef68",
+    "subnets": [
+	"subnet-9f3543c4",
+	"subnet-d1833ddd",
+	"subnet-01d74064",
+	"subnet-41ef966c",
+	"subnet-b60c22ff",
+	"subnet-d670f5ea"
+    ],
+    "securityGroupIds": ["sg-35528449"],
+    "ec2KeyPair": "micro_key",
+    "instanceRole": "ecsInstanceRole",
+    "spotIamFleetRole": "arn:aws:iam::369425333806:role/AmazonEC2SpotFleetRole",
+    "launchTemplate": {
+	"launchTemplateName": "increase-container-volume-encrypt-500",
+	"version": "$Default"
+    }
 }

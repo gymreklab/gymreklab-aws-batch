@@ -9,7 +9,10 @@
 	{
 	    "containerPath": "/data",
 	    "readOnly": false,
-	    "sourceVolume": "/data"
+	    "sourceVolume": "docker_scratch"
 	}
+    ],
+    "volumes": [
+	{"name": "docker_scratch", "host": {"sourcePath": "/docker_scratch"}}
     ]
 }

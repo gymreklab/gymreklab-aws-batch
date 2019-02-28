@@ -5,6 +5,9 @@
 BAMURL=$1
 ACC=$2
 
+# Debugging
+df -ah # should see our 500G drive at /data
+
 die()
 {
     BASE=$(basename "$0")
@@ -58,7 +61,7 @@ GangSTR \
     --bam ${DATADIR}/datafiles/${ACC}.bam \
     --regions ${DATADIR}/datafiles/hs37_ver13.chrom${CHROM}.bed \
     --ref ${DATADIR}/datafiles/hs37d5.fa \
-    --out ${DATADIR}/results/${ACC} \
+    --out ${DATADIR}/results/${ACC} --quiet \
     --chrom ${CHROM} || die "Error running GangSTR"
 bgzip ${DATADIR}/results/${ACC}.vcf || die "Error zipping GangSTR output"
 tabix -p vcf ${DATADIR}/results/${ACC}.vcf.gz || die "Error indexing GangSTR output"
