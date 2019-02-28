@@ -54,6 +54,9 @@ An example script is provided in: `run_gangstr_ena_test.sh`. This has been uploa
 
 ## Test the script locally on Docker
 TODO
+make sure to pass in AWS credentials
+# docker run -v /storage/mgymrek/dev/xvdcz/:/dev/xvdcz -it gymreklab/str-toolkit /bin/bash
+
 
 ## Run the job on the queue we created
 

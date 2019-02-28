@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# BAMURL=ftp://ftp.sra.ebi.ac.uk/vol1/run/ERR195/ERR1955393/e807d440-bd7c-4fbf-87cf-fd7dab0c11c7.bam
+# ACC=ERR1955393
 BAMURL=$1
 ACC=$2
 
@@ -34,22 +36,46 @@ CHROM=22 # Test on this chrom
 
 ### First, download data files needed for GangSTR
 mkdir -p ${DATADIR}/datafiles
+mkdir -p ${DATADIR}/results
 
 # Ref genome
-wget -O ${DATADIR}/datafiles/chr${CHROM}.fa.gz http://hgdownload.cse.ucsc.edu/goldenPath/hg19/chromosomes/chr${CHROM}.fa.gz || die "Could not download chr4"
-gunzip ${DATADIR}/datafiles/chr${CHROM}.fa.gz || die "Could not unzip chr4"
-samtools faidx chr${CHROM}.fa || die "Could not index reference fasta"
+wget -O ${DATADIR}/datafiles/hs37d5.fa.gz ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz
+gunzip ${DATADIR}/datafiles/hs37d5.fa.gz || die "Could not unzip chr4"
+samtools faidx ${DATADIR}/datafiles/hs37d5.fa || die "Could not index reference fasta"
 
 # GangSTR reference regions
-aws s3 cp s3://gangstr/hg19_ver13.bed.gz ${DATADIR}/datafiles/hg19_ver13.bed.gz || die "Error copying GangSTR ref"
-gunzip ${DATADIR}/datafiles/hg19_ver13.bed.gz || die "Could not unzip GangSTR ref"
+aws s3 cp s3://gangstr/hs37_ver13.bed.gz ${DATADIR}/datafiles/hs37_ver13.bed.gz || die "Error copying GangSTR ref"
+gunzip ${DATADIR}/datafiles/hs37_ver13.bed.gz || die "Could not unzip GangSTR ref"
+cat ${DATADIR}/datafiles/hs37_ver13.bed | awk -v"chrom=$CHROM" '($1==chrom)' > \
+    ${DATADIR}/datafiles/hs37_ver13.chrom${CHROM}.bed
 
 # ENA BAM file and index (When doing for real, use ascp or S3 if possible)
-samtools view -bS ${BAMURL} chr${CHROM} > ${DATADIR}/datafiles/${ACC}.bam
+samtools view -bS ${BAMURL} ${CHROM} > ${DATADIR}/datafiles/${ACC}.bam
 samtools index ${DATADIR}/datafiles/${ACC}.bam
 
 ### Second, run GangSTR+DumpSTR
-# TODO
+GangSTR \
+    --bam ${DATADIR}/datafiles/${ACC}.bam \
+    --regions ${DATADIR}/datafiles/hs37_ver13.chrom${CHROM}.bed \
+    --ref ${DATADIR}/datafiles/hs37d5.fa \
+    --out ${DATADIR}/results/${ACC} \
+    --chrom ${CHROM}
+bgzip ${DATADIR}/results/${ACC}.vcf
+tabix -p vcf ${DATADIR}/results/${ACC}.vcf.gz
+
+dumpSTR \
+    --vcf ${DATADIR}/results/${ACC}.vcf.gz \
+    --filter-spanbound-only \
+    --filter-badCI \
+    --max-call-DP 1000 \
+    --filter-regions /STRTools/dumpSTR/filter_files/hs37_segmentalduplications.bed.gz \
+    --filter-regions-names SEGDUP \
+    --out ${DATADIR}/results/${ACC}.filtered
+bgzip ${DATADIR}/results/${ACC}.filtered.vcf
+tabix -p vcf ${DATADIR}/results/${ACC}.filtered.vcf.gz
 
 ### Third, upload results to S3
-# TODO
+aws s3 cp ${DATADIR}/results/${ACC}.filtered.vcf.gz s3://gymreklab-awsbatch/
+aws s3 cp ${DATADIR}/results/${ACC}.filtered.loclog.tab s3://gymreklab-awsbatch/
+aws s3 cp ${DATADIR}/results/${ACC}.filtered.samplog.tab s3://gymreklab-awsbatch/
+
