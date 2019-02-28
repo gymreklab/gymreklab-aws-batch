@@ -7,9 +7,6 @@ The major steps are:
 
 ## Set up (already done)
 
-###### TODO!!! why it sometimes choses us-east-1e?
-
-
 ### Create a custom AMI with extra storage
 See aws-batch-500-encrypt-v2 ami-0b8c040a668af5e3e
 
