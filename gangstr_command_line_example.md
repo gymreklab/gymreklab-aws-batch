@@ -7,13 +7,16 @@ The major steps are:
 
 ## Set up (already done)
 
+###### TODO!!! why it sometimes choses us-east-1e?
+
+
 ### Create a custom AMI with extra storage
-See aws-batch-500 ami-093df555dac8aef68 which has ~500G at /docker_scratch
+See aws-batch-500-encrypt-v2 ami-0b8c040a668af5e3e
 
 ### Create batch compute environment and queue, register job definition
 ```
 aws batch create-compute-environment \
-    --compute-environment-name gangstr-single-core-500GB \
+    --compute-environment-name gangstr-single-core-500GB-v5 \
     --type MANAGED \
     --state ENABLED \
     --compute-resources file://gangstr-single-core-500GB.json \
@@ -22,10 +25,10 @@ aws batch create-compute-environment \
 
 ```
 aws batch create-job-queue \
-    --job-queue-name gangstr-single-core-500GB \
+    --job-queue-name gangstr-single-core-500GB-v5 \
     --state ENABLED \
     --priority 100 \
-    --compute-environment-order order=1,computeEnvironment=gangstr-single-core-500GB
+    --compute-environment-order order=1,computeEnvironment=gangstr-single-core-500GB-v5
 ```
 
 ```
@@ -64,8 +67,8 @@ BAMURL=ftp://ftp.sra.ebi.ac.uk/vol1/run/ERR195/ERR1955393/e807d440-bd7c-4fbf-87c
 ACC=ERR1955393
 aws batch submit-job \
     --job-name test-ENA-${ACC} \
-    --job-queue gangstr-single-core-500GB \
-    --job-definition str-toolkit-run:9 \
+    --job-queue gangstr-single-core-500GB-v5 \
+    --job-definition str-toolkit-run:11 \
     --container-overrides 'command=["run_gangstr_ena_test.sh",'"${BAMURL}"','"${ACC}"'],environment=[{name="BATCH_FILE_TYPE",value="script"},{name="BATCH_FILE_S3_URL",value="s3://gymreklab-awsbatch/run_gangstr_ena_test.sh"}]'
 
 ```

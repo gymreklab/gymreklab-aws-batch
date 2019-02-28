@@ -4,10 +4,10 @@
     "memory": 500,
     "command": [],
     "jobRoleArn": "arn:aws:iam::369425333806:role/batchJobRole",
-    "user": "nobody",
+    "user": "root",
     "mountPoints": [
 	{
-	    "containerPath": "/data",
+	    "containerPath": "/scratch",
 	    "readOnly": false,
 	    "sourceVolume": "docker_scratch"
 	}

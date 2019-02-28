@@ -6,7 +6,9 @@ BAMURL=$1
 ACC=$2
 
 # Debugging
+lsblk
 df -ah # should see our 500G drive at /data
+ls -ltr /scratch
 
 die()
 {
@@ -34,7 +36,7 @@ if [ -z "${ACC}" ]; then
     usage "ACC not given"
 fi
 
-DATADIR=/data # This is where we have all the EBS storage space mounted
+DATADIR=/scratch # This is where we have all the EBS storage space mounted
 CHROM=22 # Test on this chrom
 
 ### First, download data files needed for GangSTR
