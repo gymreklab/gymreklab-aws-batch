@@ -49,7 +49,7 @@ ACC=ERR1955393
 AWS_ACCESS_KEY_ID=$(cat ~/.aws/credentials  | grep id | cut -f 2 -d '=' | head -n 1 | cut -f 2 -d' ')
 AWS_SECRET_ACCESS_KEY=$(cat ~/.aws/credentials  | grep secret | cut -f 2 -d '=' | head -n 1 | cut -f 2 -d' ')
 docker run \
-       -v /storage/mgymrek/del:/data \
+       -v /storage/mgymrek/del:/scratch \
        --env BATCH_FILE_TYPE="script" \
        --env BATCH_FILE_S3_URL="s3://gymreklab-awsbatch/run_gangstr_ena_test.sh" \
        --env AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
