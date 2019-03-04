@@ -9,6 +9,7 @@ The major steps are:
 
 ### Create a custom AMI with extra storage
 See aws-batch-500-encrypt-v2 ami-0b8c040a668af5e3e
+See https://aws.amazon.com/blogs/compute/building-high-throughput-genomic-batch-workflows-on-aws-batch-layer-part-3-of-4/ for instructions on making a custom AMI.
 
 ### Create batch compute environment and queue, register job definition
 ```
@@ -49,7 +50,7 @@ ACC=ERR1955393
 AWS_ACCESS_KEY_ID=$(cat ~/.aws/credentials  | grep id | cut -f 2 -d '=' | head -n 1 | cut -f 2 -d' ')
 AWS_SECRET_ACCESS_KEY=$(cat ~/.aws/credentials  | grep secret | cut -f 2 -d '=' | head -n 1 | cut -f 2 -d' ')
 docker run \
-       -v /storage/mgymrek/del:/data \
+       -v /storage/mgymrek/del:/scratch \
        --env BATCH_FILE_TYPE="script" \
        --env BATCH_FILE_S3_URL="s3://gymreklab-awsbatch/run_gangstr_ena_test.sh" \
        --env AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \

@@ -1,4 +1,6 @@
 
+Based on https://aws.amazon.com/blogs/compute/creating-a-simple-fetch-and-run-aws-batch-job/
+
 The general steps described below are:
 
 1. Build a docker image with all the required software for each job
