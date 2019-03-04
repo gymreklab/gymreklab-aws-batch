@@ -9,6 +9,7 @@ The major steps are:
 
 ### Create a custom AMI with extra storage
 See aws-batch-500-encrypt-v2 ami-0b8c040a668af5e3e
+See https://aws.amazon.com/blogs/compute/building-high-throughput-genomic-batch-workflows-on-aws-batch-layer-part-3-of-4/ for instructions on making a custom AMI.
 
 ### Create batch compute environment and queue, register job definition
 ```
