@@ -6,12 +6,7 @@
     "instanceTypes": ["c4.large"],
     "imageId": "ami-0b8c040a668af5e3e",
     "subnets": [
-	"subnet-9f3543c4",
-	"subnet-d1833ddd",
-	"subnet-01d74064",
-	"subnet-41ef966c",
-	"subnet-b60c22ff",
-	"subnet-d670f5ea"
+	"subnet-01d74064"
     ],
     "securityGroupIds": ["sg-35528449"],
     "ec2KeyPair": "micro_key",
