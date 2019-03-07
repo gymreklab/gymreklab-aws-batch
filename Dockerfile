@@ -1,5 +1,14 @@
 FROM gymreklab/str-toolkit
 
+# Install autotools
+RUN apt-get install -y autoconf
+
+# Install vcftools
+RUN wget https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz
+RUN tar -xzvf vcftools-0.1.16.tar.gz
+WORKDIR vcftools-0.1.16
+RUN ./autogen.sh && ./configure && make && make install
+
 # Install aspera for fast file transfer
 RUN mkdir /aspera
 RUN wget http://download.asperasoft.com/download/sw/connect/3.6.2/aspera-connect-3.6.2.117442-linux-64.tar.gz -P /aspera/
