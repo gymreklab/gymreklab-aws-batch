@@ -40,5 +40,5 @@ RUN mkdir /data
 RUN mkdir /results
 
 # Get set up to run
-#WORKDIR /tmp
-#ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]
+WORKDIR /tmp
+ENTRYPOINT ["/usr/local/bin/fetch_and_run.sh"]

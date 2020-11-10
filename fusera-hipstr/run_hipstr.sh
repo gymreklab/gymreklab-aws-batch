@@ -5,7 +5,7 @@
 
 # Params file must have:
 # REFFA: s3 path to ref genome
-# HIPREF: s3 path to hipstr regions file (.gz)
+# HIPREF: URL to hipstr regions file (.gz)
 # FILETYPES: string to use for -f for fusera mount. e.g. "cram,crai"
 # OUTBUCKET: s3 bucket to put results in
 # NGCFILE: s3 path to dbgap .ngc file
@@ -37,7 +37,7 @@ source ${DATADIR}/${OUTPREFIX}/params.sh || die "Could not load params"
 # Copy files we need
 aws s3 cp $REFFA ${DATADIR}/${OUTPREFIX}/ref.fa || die "Could not download $REFFA"
 samtools faidx ${DATADIR}/${OUTPREFIX}/ref.fa || die "Could not index ref fasta"
-aws s3 cp $HIPREF ${DATADIR}/${OUTPREFIX}/hipref.bed.gz || die "Could not download HipSTR ref"
+wget -O - $HIPREF > ${DATADIR}/${OUTPREFIX}/hipref.bed.gz || die "Could not download HipSTR ref"
 gunzip ${DATADIR}/${OUTPREFIX}/hipref.bed.gz || die "Could not unzip ${DATADIR}/${OUTPREFIX}/hipref.bed.gz"
 aws s3 cp $NGCFILE ${DATADIR}/${OUTPREFIX}/dbgap.ngc || die "Could not download dbgap key"
 
